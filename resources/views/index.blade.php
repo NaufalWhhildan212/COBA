@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-header">
                 <h2>Daftar Siswa</h2>
-                <a href="{{ route('siswa.tambah') }}" class="btn btn-primary">Tambah Siswa Baru</a>
+                <a href="{{ route('siswa.create') }}" class="btn btn-primary">Tambah Siswa Baru</a>
             </div>
             <div class="card-body">
                 @if (session('success'))
@@ -30,18 +30,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($siswas as $siswa)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $siswa->nama_lengkap }}</td>
-                                <td>{{ $siswa->nis }}</td>
-                                <td>{{ $siswa->kelas }}</td>
-                            </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4" class="text-center">Belum ada data siswa.</td>
-                            </tr>
-                        @endforelse
+                    @forelse ($siswas as $siswa)
+    <tr>
+        <td>{{ $loop->iteration }}</td>
+        <td>{{ $siswa->nama_lengkap }}</td>
+        <td>{{ $siswa->nis }}</td>
+        <td>{{ $siswa->kelas }}</td>
+        <td>
+            <a href="{{ route('siswa.edit', $siswa->id) }}" class="btn btn-primary btn-sm">Edit</a>
+            <form action="{{ route('siswa.destroy', $siswa->id) }}" method="POST" style="display:inline;">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus data ini?')">Hapus</button>
+            </form>
+        </td>
+    </tr>
+@empty
+    @endforelse
                     </tbody>
                 </table>
             </div>
