@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreSiswaRequest; 
-use App\Http\Requests\UpdateSiswaRequest; 
+use App\Http\Requests\UpdateSiswaRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SiswaController extends Controller
 {
@@ -84,4 +85,22 @@ class SiswaController extends Controller
             return redirect()->back()->with('error', 'Gagal menghapus data siswa: ' . $e->getMessage());
         }
     }
+
+    public function show(Siswa $siswa)
+    {
+        // Mengembalikan view yang menampilkan detail satu siswa
+        return view('siswa.show', compact('siswa'));
+    }
+
+    public function createPdf()
+{
+    // Ambil semua data siswa dari database
+    $siswas = Siswa::all();
+        
+    $pdf = Pdf::loadView('pdf_template', compact('siswas'));
+
+    // Ubah dari ->download() menjadi ->stream()
+    return $pdf->stream('daftar-siswa.pdf');
+}
+
 }
